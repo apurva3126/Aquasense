@@ -1,9 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User, Phone, MapPin, ClipboardList, ChevronRight } from 'lucide-react';
 
 const CreateAccount = () => {
-  const [region, setRegion] = useState("");
-  const [role, setRole] = useState("");
+  const navigate = useNavigate(); // 3. INITIALIZE THIS inside the component
+  
   return (
     <div className="min-h-screen w-full bg-[#d1dcd4] flex items-center justify-center p-4">
       {/* Main Card */}
@@ -76,7 +77,9 @@ const CreateAccount = () => {
         </div>
 
         {/* Register Button */}
-        <button className="bg-[#2d5a27] hover:bg-[#1e3d1a] transition-all w-full py-4 rounded-[40px] shadow-lg mt-10">
+        <button           
+          onClick={() => navigate('/field-setup')} // Add this line!
+          className="bg-[#2d5a27] hover:bg-[#1e3d1a] transition-all w-full py-4 rounded-[40px] shadow-lg mt-10">
           <div className="text-white font-bold text-2xl uppercase tracking-wider">
             REGISTER
           </div>

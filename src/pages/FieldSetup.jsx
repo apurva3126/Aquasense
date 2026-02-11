@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // 1. Import the hook
 
 // crop images
-import wheatImg from "./assets/wheat.png";
-import paddyImg from "./assets/paddy.png";
-import cottonImg from "./assets/cotton.png";
-import tomatoImg from "./assets/tomato.png";
+import wheatImg from "../assets/wheat.png";
+import paddyImg from "../assets/paddy.png";
+import cottonImg from "../assets/cotton.png";
+import tomatoImg from "../assets/tomato.png";
 
 const crops = [
   { id: "wheat", name: "Wheat", img: wheatImg },
@@ -16,14 +17,7 @@ const crops = [
 const categories = ["Cereal", "Vegetable", "Pulse", "Fruit", "Oilseed"];
 
 const units = [
-  "Killa",
-  "Kanal",
-  "Marla",
-  "Bigha",
-  "Hectare",
-  "Acre",
-  "Square meter",
-  "Square foot",
+  "Killa", "Kanal", "Marla", "Bigha", "Hectare", "Acre", "Square meter", "Square foot",
 ];
 
 const waterSources = ["Tubewell", "Tank", "Canal", "Tap"];
@@ -36,6 +30,8 @@ const months = [
 const years = Array.from({ length: 30 }, (_, i) => 2020 + i);
 
 export default function FieldSetup() {
+  const navigate = useNavigate(); // 2. Initialize the hook
+  
   const [selectedCrop, setSelectedCrop] = useState("wheat");
   const [category, setCategory] = useState("Cereal");
   const [unit, setUnit] = useState("Killa");
@@ -48,19 +44,24 @@ export default function FieldSetup() {
         {/* MAIN CARD */}
         <div className="bg-white rounded-2xl shadow-md p-5">
 
-          {/* ✅ UPDATED HEADER (ONLY CHANGE) */}
+          {/* ✅ BACK BUTTON LINKED */}
           <div className="flex items-start gap-3 mb-3">
-            <button className="text-2xl text-green-700">←</button>
+            <button 
+              onClick={() => navigate('/register')} // 3. Set path to Register page
+              className="text-2xl text-green-700 hover:bg-green-50 rounded-full w-10 h-10 flex items-center justify-center transition-colors"
+            >
+              ←
+            </button>
             <div>
               <h1 className="text-lg font-semibold text-green-800 mt-1">
                 Field Setup
               </h1>
-            
             </div>
           </div>
- <p className="text-sm text-green-700 text-center">
-                What are you growing?
-              </p>
+
+          <p className="text-sm text-green-700 text-center">
+            What are you growing?
+          </p>
           <p className="text-sm text-green-700 text-center mt-2">
             Select your crop and field details to get started
           </p>
@@ -69,19 +70,19 @@ export default function FieldSetup() {
           <input
             type="text"
             placeholder="Search Crop"
-            className="mt-4 w-full border border-green-600 rounded-full px-4 py-2 outline-none"
+            className="mt-4 w-full border border-green-600 rounded-full px-4 py-2 outline-none focus:ring-2 focus:ring-green-500/20"
           />
 
           {/* Categories */}
-          <div className="flex gap-2 mt-4 overflow-x-auto pb-1">
+          <div className="flex gap-2 mt-4 overflow-x-auto pb-1 no-scrollbar">
             {categories.map((item) => (
               <button
                 key={item}
                 onClick={() => setCategory(item)}
-                className={`whitespace-nowrap px-4 py-1 rounded-full border text-sm ${
+                className={`whitespace-nowrap px-4 py-1 rounded-full border text-sm transition-all ${
                   category === item
                     ? "bg-green-700 text-white border-green-700"
-                    : "border-green-600 text-green-700"
+                    : "border-green-600 text-green-700 hover:bg-green-50"
                 }`}
               >
                 {item}
@@ -95,10 +96,10 @@ export default function FieldSetup() {
               <button
                 key={crop.id}
                 onClick={() => setSelectedCrop(crop.id)}
-                className={`border rounded-xl p-4 flex flex-col items-center gap-3 ${
+                className={`border rounded-xl p-4 flex flex-col items-center gap-3 transition-all ${
                   selectedCrop === crop.id
-                    ? "border-green-700 bg-green-50"
-                    : "border-green-400"
+                    ? "border-green-700 bg-green-50 ring-1 ring-green-700"
+                    : "border-green-400 hover:border-green-600"
                 }`}
               >
                 <img
@@ -121,7 +122,7 @@ export default function FieldSetup() {
             <input
               type="number"
               placeholder="Size"
-              className="mt-2 w-full border border-green-600 rounded-full px-4 py-2"
+              className="mt-2 w-full border border-green-600 rounded-full px-4 py-2 outline-none focus:ring-2 focus:ring-green-500/20"
             />
           </div>
 
@@ -131,10 +132,10 @@ export default function FieldSetup() {
               <button
                 key={u}
                 onClick={() => setUnit(u)}
-                className={`px-4 py-1 rounded-full border text-sm ${
+                className={`px-4 py-1 rounded-full border text-sm transition-all ${
                   unit === u
                     ? "bg-green-700 text-white border-green-700"
-                    : "border-green-600 text-green-700"
+                    : "border-green-600 text-green-700 hover:bg-green-50"
                 }`}
               >
                 {u}
@@ -148,17 +149,17 @@ export default function FieldSetup() {
               Date
             </label>
             <div className="flex gap-3 mt-2">
-              <select className="flex-1 border border-green-600 rounded-full px-3 py-2">
+              <select className="flex-1 border border-green-600 rounded-full px-3 py-2 outline-none text-sm bg-white">
                 <option>Day</option>
                 {days.map((d) => <option key={d}>{d}</option>)}
               </select>
 
-              <select className="flex-1 border border-green-600 rounded-full px-3 py-2">
+              <select className="flex-1 border border-green-600 rounded-full px-3 py-2 outline-none text-sm bg-white">
                 <option>Month</option>
                 {months.map((m) => <option key={m}>{m}</option>)}
               </select>
 
-              <select className="flex-1 border border-green-600 rounded-full px-3 py-2">
+              <select className="flex-1 border border-green-600 rounded-full px-3 py-2 outline-none text-sm bg-white">
                 <option>Year</option>
                 {years.map((y) => <option key={y}>{y}</option>)}
               </select>
@@ -175,10 +176,10 @@ export default function FieldSetup() {
                 <button
                   key={src}
                   onClick={() => setWaterSource(src)}
-                  className={`px-4 py-1 rounded-full border text-sm ${
+                  className={`px-4 py-1 rounded-full border text-sm transition-all ${
                     waterSource === src
                       ? "bg-green-700 text-white border-green-700"
-                      : "border-green-600 text-green-700"
+                      : "border-green-600 text-green-700 hover:bg-green-50"
                   }`}
                 >
                   {src}
@@ -188,7 +189,9 @@ export default function FieldSetup() {
           </div>
 
           {/* Continue */}
-          <button className="mt-8 w-full bg-green-800 text-white py-3 rounded-full text-lg font-semibold">
+          <button 
+            className="mt-8 w-full bg-green-800 hover:bg-green-900 transition-colors text-white py-3 rounded-full text-lg font-semibold shadow-lg active:scale-95 transform"
+          >
             Continue <span className="text-sm">(आगे बढ़ें)</span>
           </button>
 

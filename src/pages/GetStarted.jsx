@@ -1,10 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import FarmerPic from '../assets/FarmerPic.png'; // Make sure the image is in assets!
 
 const GetStarted = () => {
+    const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[#d1dcd4] flex items-center justify-center p-4">
-      {/* Main Card */}
+      {/* Main Card */} 
       <div className="bg-[#f2f4f2] w-full max-w-sm rounded-[32px] shadow-2xl p-8 flex flex-col items-center text-center border border-white/20">
         
         {/* Title */}
@@ -29,7 +31,9 @@ const GetStarted = () => {
         </div>
 
         {/* Action Button */}
-        <button className="bg-[#2d5a27] hover:bg-[#23461f] transition-colors w-full py-4 rounded-full shadow-lg group">
+        <button 
+            onClick={() => navigate('/register')}        
+            className="bg-[#2d5a27] hover:bg-[#23461f] transition-colors w-full py-4 rounded-full shadow-lg group">
           <div className="text-white font-bold text-xl uppercase tracking-wider">
             Get Started
           </div>

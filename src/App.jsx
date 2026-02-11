@@ -1,16 +1,7 @@
-import { useState } from "react";
-
-import GetStarted from './pages/GetStarted';
+import FieldSetup from "./FieldSetup";
 
 function App() {
-  return (
-    <>
-      <GetStarted />
-    </>
-  )
+  return <FieldSetup />;
 }
 
 export default App;
-
-
-

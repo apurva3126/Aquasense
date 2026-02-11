@@ -1,18 +1,16 @@
 import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0);
+import GetStarted from './pages/GetStarted';
 
+function App() {
   return (
-    <div>
-      <h1>Counter App</h1>
-      <p>Count: {count}</p>
-      <button onClick={() => setCount(count + 1)}>
-        Increase
-      </button>
-    </div>
-  );
+    <>
+      <GetStarted />
+    </>
+  )
 }
 
 export default App;
+
+
 

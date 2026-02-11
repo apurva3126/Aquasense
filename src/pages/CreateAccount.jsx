@@ -2,6 +2,8 @@ import React from 'react';
 import { User, Phone, MapPin, ClipboardList, ChevronRight } from 'lucide-react';
 
 const CreateAccount = () => {
+  const [region, setRegion] = useState("");
+  const [role, setRole] = useState("");
   return (
     <div className="min-h-screen w-full bg-[#d1dcd4] flex items-center justify-center p-4">
       {/* Main Card */}
@@ -47,7 +49,7 @@ const CreateAccount = () => {
             <div className="relative">
               <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <select className="w-full bg-white border-2 border-green-800/20 rounded-2xl py-3 pl-12 pr-10 focus:outline-none focus:border-[#2d5a27] text-gray-400 appearance-none transition-all">
-                <option>Select your role</option>
+                <option>Select your region</option>
                 <option>Punjab</option>
                 <option>Haryana</option>
                 <option>Himachal Pradesh</option>  

@@ -192,7 +192,12 @@ export default function FieldSetup() {
           <button 
             className="mt-8 w-full bg-green-800 hover:bg-green-900 transition-colors text-white py-3 rounded-full text-lg font-semibold shadow-lg active:scale-95 transform"
           >
-            Continue <span className="text-sm">(आगे बढ़ें)</span>
+          <div className="text-white font-bold text-xl uppercase tracking-wider">
+            Continue
+          </div>
+          <div className="text-white/80 text-sm font-medium mt-1">
+            (आगे बढ़ें)
+          </div>
           </button>
 
         </div>

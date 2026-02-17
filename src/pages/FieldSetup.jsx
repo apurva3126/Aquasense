@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 1. Import the hook
+import { ChevronLeft } from "lucide-react";
+
 
 // crop images
 import wheatImg from "../assets/wheat.png";
@@ -50,12 +52,13 @@ const FieldSetup = () => {
 
           {/* ✅ BACK BUTTON LINKED */}
           <div className="flex items-start gap-3 mb-3">
-            <button 
-              onClick={() => navigate('/register')} // 3. Set path to Register page
-              className="text-2xl text-green-700 hover:bg-green-50 rounded-full w-10 h-10 flex items-center justify-center transition-colors"
-            >
-              ←
-            </button>
+            <button
+  onClick={() => navigate("/register")}
+  className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-green-200 transition"
+>
+  <ChevronLeft size={32} className="text-green-900" />
+</button>
+
             <div>
               <h1 className="text-lg font-semibold text-green-800 mt-1">
                 Field Setup

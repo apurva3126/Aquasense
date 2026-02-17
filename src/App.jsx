@@ -6,7 +6,8 @@ import GetStarted from './pages/GetStarted';
 import CreateAccount from './pages/CreateAccount';
 import FieldSetup from "./pages/FieldSetup";
 import FieldStatus from "./pages/FieldStatus";
-
+import Chatbot from "./pages/chatbot";
+import Dashboard from "./pages/dashboard";
 function App() {
   return (
     
@@ -20,6 +21,10 @@ function App() {
         <Route path="/field-setup" element={<FieldSetup />} />
         {/* Dashboard / Live Status */}
         <Route path="/field-status" element={<FieldStatus />} />
+        
+        <Route path="/chatbot" element={<Chatbot />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+
       </Routes>
     
   );

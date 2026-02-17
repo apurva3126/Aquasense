@@ -29,13 +29,17 @@ const months = [
 ];
 const years = Array.from({ length: 30 }, (_, i) => 2020 + i);
 
-export default function FieldSetup() {
+const FieldSetup = () => {
   const navigate = useNavigate(); // 2. Initialize the hook
   
   const [selectedCrop, setSelectedCrop] = useState("wheat");
   const [category, setCategory] = useState("Cereal");
   const [unit, setUnit] = useState("Killa");
   const [waterSource, setWaterSource] = useState("");
+
+  const handleContinue = () => {
+    navigate('/field-status');
+  };
 
   return (
     <div className="min-h-screen bg-[#dbe4d8] flex justify-center">
@@ -188,20 +192,20 @@ export default function FieldSetup() {
             </div>
           </div>
 
-          {/* Continue */}
-          <button 
-            className="mt-8 w-full bg-green-800 hover:bg-green-900 transition-colors text-white py-3 rounded-full text-lg font-semibold shadow-lg active:scale-95 transform"
-          >
-          <div className="text-white font-bold text-xl uppercase tracking-wider">
-            Continue
+          {/* ✅ FIXED CONTINUE BUTTON */}
+          <div className="w-full mt-10 flex justify-center">
+            <button 
+              type="button"
+              onClick={handleContinue}
+              className="w-full max-w-[300px] bg-[#2d5a27] hover:bg-[#1e3d1a] text-white py-4 rounded-[40px] shadow-xl flex flex-col items-center justify-center transition-all active:scale-95 hover:shadow-2xl"
+            >
+              <span className="font-bold text-xl uppercase tracking-widest leading-none">Continue</span>
+              <span className="text-[11px] font-medium opacity-80 mt-1">(आगे बढ़ें)</span>
+            </button>
           </div>
-          <div className="text-white/80 text-sm font-medium mt-1">
-            (आगे बढ़ें)
-          </div>
-          </button>
-
-        </div>
+         </div>
       </div>
     </div>
   );
-}
+};
+export default FieldSetup;

@@ -54,79 +54,68 @@ const FieldStatus = () => {
               </div>
             </div>
 
+            
             {/* 2. Device Status Box (Dynamic) */}
             <div className="border border-[#2d5a27] rounded-2xl p-4 flex gap-4 bg-white relative">
-              <Zap className="text-[#2d5a27] shrink-0" size={48} />
-<<<<<<< HEAD
-              <div className="w-full space-y-3">
-                
-                {/* Primary Device Toggle */}
-                <div className="flex justify-between items-center">
-                  <h3 className="text-[#2d5a27] font-bold text-xl">
-                    Device: {isDeviceOn ? 'On' : 'Off'}
-                  </h3>
-=======
-              <div className="w-full">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-[#2d5a27] font-bold text-xl">
-                      Device {isAutoMode ? 'Auto' : 'Off'}
-                    </h3>
-                    <p className="text-[#2d5a27] text-xs font-semibold">
-                      Auto Mode: {isAutoMode ? 'On' : 'Off'}
-                    </p>
-                  </div>
-                  
-                  {/* Toggle Switch */}
->>>>>>> 84bc3e93ba41afd7ec5221100e43e9e5253c0b59
-                  <button 
-                    onClick={() => {
-                      setIsDeviceOn(!isDeviceOn);
-                      if(isDeviceOn) setIsAutoIrrigation(false); // Reset nested toggle if parent turns off
-                    }}
-                    className={`w-11 h-6 rounded-full p-1 transition-colors duration-300 flex items-center ${
-                      isDeviceOn ? 'bg-[#2d5a27]' : 'border border-[#2d5a27]'
-                    }`}
-                  >
-                    <div className={`w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${
-                      isDeviceOn ? 'translate-x-5 bg-white' : 'translate-x-0 bg-[#2d5a27]'
-                    }`} />
-                  </button>
+            <Zap className="text-[#2d5a27] shrink-0" size={48} />
+            <div className="w-full space-y-3">
+    
+              {/* Primary Device Toggle */}
+              <div className="flex justify-between items-center">
+                <h3 className="text-[#2d5a27] font-bold text-xl">
+                  Device: {isDeviceOn ? 'On' : 'Off'}
+                </h3>
+                <button 
+                  onClick={() => {
+                  // If turning off, also turn off auto-irrigation
+                  if (isDeviceOn) setIsAutoIrrigation(false);
+                  setIsDeviceOn(!isDeviceOn);
+                }}
+                className={`w-11 h-6 rounded-full p-1 transition-colors duration-300 flex items-center ${
+                  isDeviceOn ? 'bg-[#2d5a27]' : 'border border-[#2d5a27]'
+                }`}
+                >
+                <div className={`w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${
+                 isDeviceOn ? 'translate-x-5 bg-white' : 'translate-x-0 bg-[#2d5a27]'
+                }`} />
+                </button>
                 </div>
 
-                {/* Nested Options - Only shows when Device is On */}
-                {isDeviceOn && (
-                  <div className="space-y-3 pt-2 border-t border-[#2d5a27]/10">
-                    
-                    {/* Auto Irrigation Toggle */}
-                    <div className="flex justify-between items-center">
-                      <p className="text-[#2d5a27] text-sm font-bold">
-                        Auto irrigation: {isAutoIrrigation ? 'On' : 'Off'}
-                      </p>
-                      <button 
-                        onClick={() => setIsAutoIrrigation(!isAutoIrrigation)}
-                        className={`w-11 h-6 rounded-full p-1 transition-colors duration-300 flex items-center ${
-                          isAutoIrrigation ? 'bg-[#2d5a27]' : 'border border-[#2d5a27]'
-                        }`}
-                      >
-                        <div className={`w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${
-                          isAutoIrrigation ? 'translate-x-5 bg-white' : 'translate-x-0 bg-[#2d5a27]'
-                        }`} />
-                      </button>
-                    </div>
+            {/* Nested Options - Only shows when Device is On */}
+            {isDeviceOn && (
+            <div className="space-y-3 pt-2 border-t border-[#2d5a27]/10 animate-in fade-in duration-300">
+        
+              {/* Auto Irrigation Toggle */}
+              <div className="flex justify-between items-center">
+          <p className="text-[#2d5a27] text-sm font-bold">
+            Auto irrigation: {isAutoIrrigation ? 'On' : 'Off'}
+          </p>
+          <button 
+            onClick={() => setIsAutoIrrigation(!isAutoIrrigation)}
+            className={`w-11 h-6 rounded-full p-1 transition-colors duration-300 flex items-center ${
+              isAutoIrrigation ? 'bg-[#2d5a27]' : 'border border-[#2d5a27]'
+            }`}
+          >
+            <div className={`w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${
+              isAutoIrrigation ? 'translate-x-5 bg-white' : 'translate-x-0 bg-[#2d5a27]'
+            }`} />
+          </button>
+        </div>
 
-                    {/* View Dashboard Button (In a border box per image) */}
-                    <button 
-                      onClick={() => navigate('/dashboard')}
-                      className="w-full mt-2 py-2 px-3 border border-[#2d5a27]/40 rounded-lg flex items-center justify-center gap-2 text-green-800 hover:bg-green-50 transition-colors"
-                    >
-                      <BarChart3 size={18} />
-                      <span className="text-sm underline font-medium">View Dashboard</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+        {/* View Dashboard Button - Only shows when Auto Irrigation is ON */}
+        {isAutoIrrigation && (
+          <button 
+            onClick={() => navigate('/dashboard')}
+            className="w-full mt-2 py-2 px-3 border border-[#2d5a27]/40 rounded-lg flex items-center justify-center gap-2 text-[#2d5a27]/60 hover:bg-green-50 transition-all active:scale-95"
+          >
+            <BarChart3 size={18} />
+            <span className="text-sm underline font-medium">View Dashboard</span>
+          </button>
+        )}
+      </div>
+    )}
+  </div>
+</div>
 
             {/* 3. Chatbot Button */}
             <button 

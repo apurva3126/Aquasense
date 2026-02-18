@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { crops } from "../data/cropsData";
 
+
 const categories = [
   "Cereal",
   "Vegetable",
@@ -35,6 +36,7 @@ const years = Array.from({ length: 20 }, (_, i) => 2024 + i);
 const FieldSetup = () => {
   const navigate = useNavigate();
 
+
   const [category, setCategory] = useState("Cereal");
   const [selectedCrop, setSelectedCrop] = useState("");
   const [soilType, setSoilType] = useState("");
@@ -60,10 +62,22 @@ const FieldSetup = () => {
     : [];
 
   const handleContinue = () => {
+    
     if (!selectedCrop || !soilType || !fieldSize || !waterSource || !day || !month || !year) {
       alert("Please complete all required fields");
       return;
     }
+
+    const monthIndex = months.indexOf(month) + 1;
+
+  const isValidDate =
+    new Date(`${year}-${monthIndex}-${day}`).getDate() == day;
+
+  if (!isValidDate) {
+    setError("Invalid sowing date selected");
+    return;
+  }
+
 
     navigate("/field-status");
   };
@@ -157,9 +171,14 @@ const FieldSetup = () => {
               Field Size
             </label>
             <input
-              type="number"
+              type="text"
               value={fieldSize}
-              onChange={(e) => setFieldSize(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*\.?\d*$/.test(value)) {
+                  setFieldSize(value);
+                }
+              }}
               placeholder="Enter size"
               className="mt-2 w-full border border-green-600 rounded-full px-4 py-2 outline-none focus:ring-2 focus:ring-green-500/20"
             />

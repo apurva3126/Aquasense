@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { User, Phone, MapPin, ClipboardList, ChevronRight } from "lucide-react";
 import { punjabDistricts } from "../data/punjabDistricts";
 
+
+
 const CreateAccount = () => {
   const navigate = useNavigate();
+  
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -13,6 +16,7 @@ const CreateAccount = () => {
   const [role, setRole] = useState("");
 
   const handleRegister = () => {
+   
     if (!name || !phone || !region || !role) {
       alert("Please fill all required fields");
       return;
@@ -20,6 +24,10 @@ const CreateAccount = () => {
 
     if (region === "Punjab" && !district) {
       alert("Please select your district");
+      return;
+    }
+    if (phone.length !== 10) {
+      alert("Phone number must be exactly 10 digits");
       return;
     }
 
@@ -49,8 +57,11 @@ const CreateAccount = () => {
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
+                inputMode="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value.replace(/[^a-zA-Z\s]/g, ""))
+                }}
                 placeholder="Your Name"
                 className="w-full bg-white border-2 border-green-800/20 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-[#2d5a27] text-gray-700"
               />
@@ -65,9 +76,14 @@ const CreateAccount = () => {
             <div className="relative">
               <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
-                type="text"
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                maxLength={10}
+                onChange={(e) => {
+                  setPhone(e.target.value.replace(/\D/g, ""))
+                }}
                 placeholder="+91 | 12345 67890"
                 className="w-full bg-white border-2 border-green-800/20 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-[#2d5a27] text-gray-700"
               />

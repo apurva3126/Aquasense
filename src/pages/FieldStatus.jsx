@@ -28,7 +28,7 @@ const FieldStatus = () => {
           <div className="flex items-center gap-3 mb-6">
             <button 
               onClick={() => navigate('/field-setup')}
-              className="text-[#2d5a27] hover:bg-green-50 rounded-full w-10 h-10 flex items-center justify-center transition-colors"
+              className="text-[#2d5a27] hover:bg-green-200 rounded-full w-10 h-10 flex items-center justify-center transition-colors"
             >
               <ChevronLeft size={32} />
             </button>

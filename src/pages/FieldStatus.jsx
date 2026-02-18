@@ -59,7 +59,7 @@ const FieldStatus = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="text-[#2d5a27] font-bold text-xl">
-                      Motor: {isAutoMode ? 'Auto' : 'Off'}
+                      Device {isAutoMode ? 'Auto' : 'Off'}
                     </h3>
                     <p className="text-[#2d5a27] text-xs font-semibold">
                       Auto Mode: {isAutoMode ? 'On' : 'Off'}

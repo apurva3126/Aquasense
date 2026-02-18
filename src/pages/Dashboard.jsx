@@ -13,7 +13,7 @@ export default function Dashboard() {
       <div className="w-full max-w-[420px] min-h-screen bg-[#f8f9f8] shadow-xl">
 
         {/* HEADER */}
-        <div className="bg-gradient-to-r from-green-700 to-green-500 px-4 py-5 rounded-b-3xl">
+        <div className="bg-gradient-to-r from-[#2d5a27] to-green-700 px-4 py-5 rounded-b-3xl">
           <div className="flex items-center gap-3 text-white">
             <button
               onClick={() => navigate("/field-status")}
@@ -44,7 +44,7 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl p-4 shadow border border-green-100">
             <h3 className="text-sm font-semibold text-green-900 flex items-center gap-1">
               Soil Moisture
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-green-700 rounded-full"></span>
             </h3>
 
             <div className="flex justify-between items-center mt-3">
@@ -57,7 +57,7 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <div className="w-16 h-16 rounded-full border-4 border-green-500 flex items-center justify-center text-xs text-green-700">
+              <div className="w-16 h-16 rounded-full border-4 border-green-700 flex items-center justify-center text-xs text-green-700">
                 Gauge
               </div>
             </div>
@@ -66,8 +66,8 @@ export default function Dashboard() {
           {/* Soil Humidity */}
           <div className="bg-white rounded-2xl p-4 shadow border border-green-100">
             <h3 className="text-sm font-semibold text-green-900 flex items-center gap-1">
-              Soil Humidity
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              Humidity
+              <span className="w-2 h-2 bg-green-700 rounded-full"></span>
             </h3>
 
             <div className="mt-3">
@@ -79,7 +79,7 @@ export default function Dashboard() {
               </p>
 
               <div className="mt-3 h-10 bg-green-100 rounded-lg overflow-hidden">
-                <div className="h-full w-[48%] bg-green-400 rounded-lg"></div>
+                <div className="h-full w-[48%] bg-gradient-to-r from-[#2d5a27] to-green-700 rounded-lg"></div>
               </div>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <div className="w-16 h-16 rounded-full border-4 border-green-400 flex items-center justify-center text-xs text-green-700">
+              <div className="w-16 h-16 rounded-full border-4 border-green-700 flex items-center justify-center text-xs text-green-700">
                 Meter
               </div>
             </div>

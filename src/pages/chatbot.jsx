@@ -50,12 +50,12 @@ export default function ChatBot() {
       <div className="w-full max-w-[420px] min-h-screen bg-white shadow-xl flex flex-col">
 
         {/* Header */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-green-100">
+        <div className="flex items-center gap-3 px-4 py-3 bg-[#2d5a27]">
           <button
   onClick={() => navigate("/field-status")}
   className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-green-200 transition"
 >
-  <ChevronLeft size={32} className="text-green-900" />
+  <ChevronLeft size={32} className="text-white" />
 </button>
 
 
@@ -63,7 +63,7 @@ export default function ChatBot() {
             🤖
           </div>
 
-          <h1 className="text-base font-semibold text-green-900">
+          <h1 className="text-base font-semibold text-white">
             AI Chatbot
           </h1>
         </div>

@@ -81,12 +81,12 @@ const FieldStatus = () => {
                 </button>
                 </div>
 
-            {/* Nested Options - Only shows when Device is On */}
-            {isDeviceOn && (
-            <div className="space-y-3 pt-2 border-t border-[#2d5a27]/10 animate-in fade-in duration-300">
+            {/* Nested Options - Shows when Device is On */}
+    {isDeviceOn && (
+      <div className="space-y-3 pt-2 border-t border-[#2d5a27]/10 animate-in fade-in duration-300">
         
-              {/* Auto Irrigation Toggle */}
-              <div className="flex justify-between items-center">
+        {/* Auto Irrigation Toggle */}
+        <div className="flex justify-between items-center">
           <p className="text-[#2d5a27] text-sm font-bold">
             Auto irrigation: {isAutoIrrigation ? 'On' : 'Off'}
           </p>
@@ -102,16 +102,14 @@ const FieldStatus = () => {
           </button>
         </div>
 
-        {/* View Dashboard Button - Only shows when Auto Irrigation is ON */}
-        {isAutoIrrigation && (
-          <button 
-            onClick={() => navigate('/dashboard')}
-            className="w-full mt-2 py-2 px-3 border border-[#2d5a27]/40 rounded-lg flex items-center justify-center gap-2 text-[#2d5a27]/60 hover:bg-green-50 transition-all active:scale-95"
-          >
-            <BarChart3 size={18} />
-            <span className="text-sm underline font-medium">View Dashboard</span>
-          </button>
-        )}
+        {/* View Dashboard Button - Now independent of Auto Irrigation toggle */}
+        <button 
+          onClick={() => navigate('/dashboard')}
+          className="w-full mt-2 py-2 px-3 border border-[#2d5a27]/40 rounded-lg flex items-center justify-center gap-2 text-[#2d5a27] hover:bg-green-50 transition-all active:scale-95"
+        >
+          <BarChart3 size={18} />
+          <span className="text-sm underline font-medium">View Dashboard</span>
+        </button>
       </div>
     )}
   </div>

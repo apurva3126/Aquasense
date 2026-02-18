@@ -57,6 +57,7 @@ const FieldStatus = () => {
             {/* 2. Device Status Box (Dynamic) */}
             <div className="border border-[#2d5a27] rounded-2xl p-4 flex gap-4 bg-white relative">
               <Zap className="text-[#2d5a27] shrink-0" size={48} />
+<<<<<<< HEAD
               <div className="w-full space-y-3">
                 
                 {/* Primary Device Toggle */}
@@ -64,6 +65,20 @@ const FieldStatus = () => {
                   <h3 className="text-[#2d5a27] font-bold text-xl">
                     Device: {isDeviceOn ? 'On' : 'Off'}
                   </h3>
+=======
+              <div className="w-full">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-[#2d5a27] font-bold text-xl">
+                      Device {isAutoMode ? 'Auto' : 'Off'}
+                    </h3>
+                    <p className="text-[#2d5a27] text-xs font-semibold">
+                      Auto Mode: {isAutoMode ? 'On' : 'Off'}
+                    </p>
+                  </div>
+                  
+                  {/* Toggle Switch */}
+>>>>>>> 84bc3e93ba41afd7ec5221100e43e9e5253c0b59
                   <button 
                     onClick={() => {
                       setIsDeviceOn(!isDeviceOn);

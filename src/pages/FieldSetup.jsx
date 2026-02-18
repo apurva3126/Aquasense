@@ -25,6 +25,13 @@ const units = [
 
 const waterSources = ["Tubewell", "Tank", "Canal", "Tap"];
 
+const days = Array.from({ length: 31 }, (_, i) => i + 1);
+const months = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
+];
+const years = Array.from({ length: 20 }, (_, i) => 2024 - i);
+
 const FieldSetup = () => {
   const navigate = useNavigate();
 
@@ -35,23 +42,25 @@ const FieldSetup = () => {
   const [unit, setUnit] = useState("Killa");
   const [waterSource, setWaterSource] = useState("");
 
-  // Filter crops based on selected category
+  // NEW STATES FOR DATE
+  const [day, setDay] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+
   const filteredCrops = crops.filter(
     (crop) => crop.category === category
   );
 
-  // Get selected crop data
   const selectedCropData = crops.find(
     (crop) => crop.id === selectedCrop
   );
 
-  // Soil types only for selected crop
   const relevantSoilTypes = selectedCropData
     ? selectedCropData.soilTypes
     : [];
 
   const handleContinue = () => {
-    if (!selectedCrop || !soilType || !fieldSize || !waterSource) {
+    if (!selectedCrop || !soilType || !fieldSize || !waterSource || !day || !month || !year) {
       alert("Please complete all required fields");
       return;
     }
@@ -77,7 +86,7 @@ const FieldSetup = () => {
             </h1>
           </div>
 
-          {/* Category Selection */}
+          {/* Category */}
           <div className="flex gap-2 overflow-x-auto pb-2">
             {categories.map((cat) => (
               <button
@@ -98,7 +107,7 @@ const FieldSetup = () => {
             ))}
           </div>
 
-          {/* Crop Selection */}
+          {/* Crop */}
           <div className="grid grid-cols-2 gap-4 mt-6">
             {filteredCrops.map((crop) => (
               <button
@@ -118,7 +127,7 @@ const FieldSetup = () => {
             ))}
           </div>
 
-          {/* Soil Type (Appears After Crop Selection) */}
+          {/* Soil */}
           {selectedCrop && (
             <div className="mt-6">
               <label className="text-sm font-semibold text-green-800">
@@ -173,6 +182,47 @@ const FieldSetup = () => {
             ))}
           </div>
 
+          {/* 🔥 SOWING DATE (NEW SECTION) */}
+          <div className="mt-6">
+            <label className="text-sm font-semibold text-green-800">
+              Sowing Date
+            </label>
+            <div className="flex gap-2 mt-2">
+              <select
+                value={day}
+                onChange={(e) => setDay(e.target.value)}
+                className="flex-1 border border-green-600 rounded-full px-3 py-2 text-sm"
+              >
+                <option value="">Day</option>
+                {days.map((d) => (
+                  <option key={d}>{d}</option>
+                ))}
+              </select>
+
+              <select
+                value={month}
+                onChange={(e) => setMonth(e.target.value)}
+                className="flex-1 border border-green-600 rounded-full px-3 py-2 text-sm"
+              >
+                <option value="">Month</option>
+                {months.map((m) => (
+                  <option key={m}>{m}</option>
+                ))}
+              </select>
+
+              <select
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                className="flex-1 border border-green-600 rounded-full px-3 py-2 text-sm"
+              >
+                <option value="">Year</option>
+                {years.map((y) => (
+                  <option key={y}>{y}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {/* Water Source */}
           <div className="mt-6">
             <label className="text-sm font-semibold text-green-800">
@@ -195,7 +245,7 @@ const FieldSetup = () => {
             </div>
           </div>
 
-          {/* Continue Button */}
+          {/* Continue */}
           <div className="w-full mt-10 flex justify-center">
             <button
               onClick={handleContinue}

@@ -1,22 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Phone, MapPin, ClipboardList, ChevronRight } from "lucide-react";
-import { punjabDistricts } from "../data/punjabDistricts";
-
-
+import { getdistricts } from "../api";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
-  
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [region, setRegion] = useState("");
-  const [district, setDistrict] = useState("");
+  const [district, setdistrict] = useState("");
   const [role, setRole] = useState("");
 
+  const [districts, setdistricts] = useState([]); // small d
+
+  // 🔥 Fetch districts when Punjab selected
+  useEffect(() => {
+    if (region === "Punjab") {
+      getdistricts()
+        .then((data) => {
+          console.log("district API response:", data);
+          setdistricts(data.districts || data);
+        })
+        .catch((err) => {
+          console.error("district fetch error:", err);
+          setdistricts([]);
+        });
+    }
+  }, [region]);
+
   const handleRegister = () => {
-   
     if (!name || !phone || !region || !role) {
       alert("Please fill all required fields");
       return;
@@ -26,6 +39,7 @@ const CreateAccount = () => {
       alert("Please select your district");
       return;
     }
+
     if (phone.length !== 10) {
       alert("Phone number must be exactly 10 digits");
       return;
@@ -57,11 +71,10 @@ const CreateAccount = () => {
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                inputMode="text"
                 value={name}
-                onChange={(e) => {
+                onChange={(e) =>
                   setName(e.target.value.replace(/[^a-zA-Z\s]/g, ""))
-                }}
+                }
                 placeholder="Your Name"
                 className="w-full bg-white border-2 border-green-800/20 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-[#2d5a27] text-gray-700"
               />
@@ -77,13 +90,11 @@ const CreateAccount = () => {
               <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="tel"
-                inputMode="numeric"
-                pattern="[0-9]*"
                 value={phone}
                 maxLength={10}
-                onChange={(e) => {
+                onChange={(e) =>
                   setPhone(e.target.value.replace(/\D/g, ""))
-                }}
+                }
                 placeholder="+91 | 12345 67890"
                 className="w-full bg-white border-2 border-green-800/20 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-[#2d5a27] text-gray-700"
               />
@@ -101,7 +112,7 @@ const CreateAccount = () => {
                 value={region}
                 onChange={(e) => {
                   setRegion(e.target.value);
-                  setDistrict(""); // reset district on region change
+                  setDistrict("");
                 }}
                 className="w-full bg-white border-2 border-green-800/20 rounded-2xl py-3 pl-12 pr-10 focus:outline-none focus:border-[#2d5a27] text-gray-700 appearance-none"
               >
@@ -114,7 +125,7 @@ const CreateAccount = () => {
             </div>
           </div>
 
-          {/* District (Only if Punjab) */}
+          {/* District */}
           {region === "Punjab" && (
             <div>
               <label className="block text-[#2d5a27] font-bold text-sm mb-1 ml-1">
@@ -124,17 +135,22 @@ const CreateAccount = () => {
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <select
                   value={district}
-                  onChange={(e) => setDistrict(e.target.value)}
+                  onChange={(e) => setdistrict(e.target.value)}
                   className="w-full bg-white border-2 border-green-800/20 rounded-2xl py-3 pl-12 pr-10 focus:outline-none focus:border-[#2d5a27] text-gray-700 appearance-none"
                 >
                   <option value="">Select your district</option>
-                  {punjabDistricts.map((dist) => (
-                    <option key={dist} value={dist}>
-                      {dist}
+
+                  {districts.map((dist, index) => (
+                    <option
+                      key={dist.id || index}
+                      value={dist.name || dist}
+                    >
+                      {dist.name || dist}
                     </option>
                   ))}
+
                 </select>
-                  <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               </div>
             </div>
           )}
@@ -162,7 +178,6 @@ const CreateAccount = () => {
 
         </div>
 
-        {/* Register Button */}
         <button
           onClick={handleRegister}
           className="bg-[#2d5a27] hover:bg-[#1e3d1a] transition-all w-full py-4 rounded-[40px] shadow-lg mt-10"

@@ -5,6 +5,11 @@ export async function getCrops() {
   if (!res.ok) throw new Error("Failed to fetch crops");
   return res.json();
 }
+export async function getdistricts() {
+  const res = await fetch(`${API_BASE}/villages/districts`);
+  if (!res.ok) throw new Error("Failed to fetch districts");
+  return res.json();
+}
 
 export async function registerUser(payload) {
   const res = await fetch(`${API_BASE}/users/register`, {

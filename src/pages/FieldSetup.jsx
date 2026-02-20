@@ -1,12 +1,7 @@
-import { useState, useEffect } from "react";
-import { getCrops, updateSoilAI } from "../api";
-
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-
-
-
-
+import { crops } from "../data/cropsData";   // 👈 static crops file
 
 const categories = [
   "Cereal",
@@ -14,33 +9,18 @@ const categories = [
   "Pulse",
   "Fruit",
   "Oilseed",
-  "Fiber",
+  "Commercial",
 ];
 
 const units = [
-  "Killa",
-  "Kanal",
-  "Marla",
-  "Bigha",
-  "Hectare",
-  "Acre",
-  "Square meter",
-  "Square foot",
+  "Killa","Kanal","Marla","Bigha",
+  "Hectare","Acre","Square meter","Square foot"
 ];
 
 const waterSources = ["Tubewell", "Tank", "Canal", "Tap"];
 
-const days = Array.from({ length: 31 }, (_, i) => i + 1);
-const months = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December"
-];
-const years = Array.from({ length: 20 }, (_, i) => 2024 + i);
-
 const FieldSetup = () => {
   const navigate = useNavigate();
-
-const [crops, setCrops] = useState([]);
 
   const [category, setCategory] = useState("Cereal");
   const [selectedCrop, setSelectedCrop] = useState("");
@@ -49,69 +29,32 @@ const [crops, setCrops] = useState([]);
   const [unit, setUnit] = useState("Killa");
   const [waterSource, setWaterSource] = useState("");
 
-  // NEW STATES FOR DATE
-  const [day, setDay] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
-
   const filteredCrops = crops.filter(
-  (crop) => crop.category?.toLowerCase() === category.toLowerCase()
-);
+    (crop) => crop.category === category
+  );
 
   const selectedCropData = crops.find(
-  (crop) => crop.id === Number(selectedCrop)
-);
+    (crop) => crop.id === selectedCrop
+  );
 
- const relevantSoilTypes = selectedCropData?.preferred_soils || [];
+  const relevantSoilTypes = selectedCropData?.soilTypes || [];
 
+  const handleContinue = () => {
+    if (!selectedCrop || !soilType || !fieldSize || !waterSource) {
+      alert("Please complete all required fields");
+      return;
+    }
 
-   useEffect(() => {
-  console.log("FieldSetup mounted");
-
-  getCrops()
-    .then((data) => {
-      console.log("Fetched crops:", data);
-      setCrops(data.crops); // 👈 THIS IS THE FIX
-    })
-    .catch((err) => console.error("Fetch error:", err));
-}, []);
-
-  const handleContinue = async () => {
-
-  if (!selectedCrop || !soilType || !fieldSize || !waterSource || !day || !month || !year) {
-    alert("Please complete all required fields");
-    return;
-  }
-
-  const monthIndex = months.indexOf(month) + 1;
-
-  const isValidDate =
-    new Date(`${year}-${monthIndex}-${day}`).getDate() == day;
-
-  if (!isValidDate) {
-    alert("Invalid sowing date selected");
-    return;
-  }
-
-  try {
-    const payload = {
-      device_id: "TEMP_DEVICE_001",
-      soil_type: soilType,
-    };
-
-    console.log("Sending soil update:", payload);
-
-    const response = await updateSoilAI(payload);
-
-    console.log("Soil AI updated:", response);
+    console.log({
+      crop: selectedCropData.name,
+      soil: soilType,
+      size: fieldSize,
+      unit,
+      waterSource
+    });
 
     navigate("/field-status");
-
-  } catch (err) {
-    console.error("Soil update failed:", err);
-    alert("Backend soil update failed. Check console.");
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-[#dbe4d8] flex justify-center">
@@ -122,7 +65,7 @@ const [crops, setCrops] = useState([]);
           <div className="flex items-center gap-3 mb-4">
             <button
               onClick={() => navigate("/register")}
-              className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-green-200 transition"
+              className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-green-200"
             >
               <ChevronLeft size={24} className="text-green-900" />
             </button>
@@ -141,10 +84,10 @@ const [crops, setCrops] = useState([]);
                   setSelectedCrop("");
                   setSoilType("");
                 }}
-                className={`px-4 py-1 rounded-full border text-sm transition ${
+                className={`px-4 py-1 rounded-full border text-sm ${
                   category === cat
-                    ? "bg-green-700 text-white border-green-700"
-                    : "border-green-600 text-green-700 hover:bg-green-50"
+                    ? "bg-green-700 text-white"
+                    : "border-green-600 text-green-700"
                 }`}
               >
                 {cat}
@@ -161,10 +104,10 @@ const [crops, setCrops] = useState([]);
                   setSelectedCrop(crop.id);
                   setSoilType("");
                 }}
-                className={`border rounded-xl p-4 text-sm font-medium transition ${
+                className={`border rounded-xl p-4 text-sm ${
                   selectedCrop === crop.id
                     ? "border-green-700 bg-green-50"
-                    : "border-green-400 hover:border-green-600"
+                    : "border-green-400"
                 }`}
               >
                 {crop.name}
@@ -172,7 +115,7 @@ const [crops, setCrops] = useState([]);
             ))}
           </div>
 
-          {/* Soil */}
+          {/* Soil Type */}
           {selectedCrop && (
             <div className="mt-6">
               <label className="text-sm font-semibold text-green-800">
@@ -183,10 +126,10 @@ const [crops, setCrops] = useState([]);
                   <button
                     key={soil}
                     onClick={() => setSoilType(soil)}
-                    className={`px-4 py-1 rounded-full border text-sm transition ${
+                    className={`px-4 py-1 rounded-full border text-sm ${
                       soilType === soil
-                        ? "bg-green-700 text-white border-green-700"
-                        : "border-green-600 text-green-700 hover:bg-green-50"
+                        ? "bg-green-700 text-white"
+                        : "border-green-600 text-green-700"
                     }`}
                   >
                     {soil}
@@ -202,16 +145,10 @@ const [crops, setCrops] = useState([]);
               Field Size
             </label>
             <input
-              type="text"
               value={fieldSize}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (/^\d*\.?\d*$/.test(value)) {
-                  setFieldSize(value);
-                }
-              }}
+              onChange={(e) => setFieldSize(e.target.value)}
+              className="mt-2 w-full border rounded-full px-4 py-2"
               placeholder="Enter size"
-              className="mt-2 w-full border border-green-600 rounded-full px-4 py-2 outline-none focus:ring-2 focus:ring-green-500/20"
             />
           </div>
 
@@ -221,56 +158,15 @@ const [crops, setCrops] = useState([]);
               <button
                 key={u}
                 onClick={() => setUnit(u)}
-                className={`px-4 py-1 rounded-full border text-sm transition ${
+                className={`px-4 py-1 rounded-full border text-sm ${
                   unit === u
-                    ? "bg-green-700 text-white border-green-700"
-                    : "border-green-600 text-green-700 hover:bg-green-50"
+                    ? "bg-green-700 text-white"
+                    : "border-green-600 text-green-700"
                 }`}
               >
                 {u}
               </button>
             ))}
-          </div>
-
-          {/* 🔥 SOWING DATE (NEW SECTION) */}
-          <div className="mt-6">
-            <label className="text-sm font-semibold text-green-800">
-              Sowing Date
-            </label>
-            <div className="flex gap-2 mt-2">
-              <select
-                value={day}
-                onChange={(e) => setDay(e.target.value)}
-                className="flex-1 border border-green-600 rounded-full px-3 py-2 text-sm"
-              >
-                <option value="">Day</option>
-                {days.map((d) => (
-                  <option key={d}>{d}</option>
-                ))}
-              </select>
-
-              <select
-                value={month}
-                onChange={(e) => setMonth(e.target.value)}
-                className="flex-1 border border-green-600 rounded-full px-3 py-2 text-sm"
-              >
-                <option value="">Month</option>
-                {months.map((m) => (
-                  <option key={m}>{m}</option>
-                ))}
-              </select>
-
-              <select
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                className="flex-1 border border-green-600 rounded-full px-3 py-2 text-sm"
-              >
-                <option value="">Year</option>
-                {years.map((y) => (
-                  <option key={y}>{y}</option>
-                ))}
-              </select>
-            </div>
           </div>
 
           {/* Water Source */}
@@ -283,10 +179,10 @@ const [crops, setCrops] = useState([]);
                 <button
                   key={src}
                   onClick={() => setWaterSource(src)}
-                  className={`px-4 py-1 rounded-full border text-sm transition ${
+                  className={`px-4 py-1 rounded-full border text-sm ${
                     waterSource === src
-                      ? "bg-green-700 text-white border-green-700"
-                      : "border-green-600 text-green-700 hover:bg-green-50"
+                      ? "bg-green-700 text-white"
+                      : "border-green-600 text-green-700"
                   }`}
                 >
                   {src}
@@ -299,7 +195,7 @@ const [crops, setCrops] = useState([]);
           <div className="w-full mt-10 flex justify-center">
             <button
               onClick={handleContinue}
-              className="w-full max-w-[300px] bg-[#2d5a27] hover:bg-[#1e3d1a] text-white py-4 rounded-[40px] shadow-xl transition active:scale-95"
+              className="w-full max-w-[300px] bg-[#2d5a27] text-white py-4 rounded-[40px]"
             >
               Continue
             </button>

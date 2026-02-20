@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8000/api/v1";
+const API_BASE = "https://aquasensebackend-ru2t.onrender.com/api/v1";
 
 export async function getCrops() {
   const res = await fetch(`${API_BASE}/crops`);

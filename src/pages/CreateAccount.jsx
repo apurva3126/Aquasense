@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Phone, MapPin, ClipboardList, ChevronRight } from "lucide-react";
-import { getdistricts } from "../api";
+import { getdistricts, registerUser } from "../api";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -29,25 +29,31 @@ const CreateAccount = () => {
     }
   }, [region]);
 
-  const handleRegister = () => {
-    if (!name || !phone || !region || !role) {
-      alert("Please fill all required fields");
-      return;
-    }
+  const handleRegister = async () => {
+  if (!name || !phone || !region || !role) {
+    alert("Please fill all required fields");
+    return;
+  }
 
-    if (region === "Punjab" && !district) {
-      alert("Please select your district");
-      return;
-    }
+  if (region === "Punjab" && !district) {
+    alert("Please select your district");
+    return;
+  }
 
-    if (phone.length !== 10) {
-      alert("Phone number must be exactly 10 digits");
-      return;
-    }
+  if (phone.length !== 10) {
+    alert("Phone number must be exactly 10 digits");
+    return;
+  }
 
-    navigate("/field-setup");
+  const stepOneData = {
+    full_name: name,
+    phone_number: phone,
+    village_id: district, // make sure this is numeric
+    role: role.toLowerCase()
   };
 
+  navigate("/field-setup", { state: stepOneData });
+};
   return (
     <div className="min-h-screen w-full bg-[#d1dcd4] flex items-center justify-center p-4">
       <div className="bg-[#f2f4f2] w-full max-w-[400px] rounded-[40px] shadow-2xl p-8 flex flex-col items-center border border-white">
@@ -112,7 +118,7 @@ const CreateAccount = () => {
                 value={region}
                 onChange={(e) => {
                   setRegion(e.target.value);
-                  setDistrict("");
+                  setdistrict("");
                 }}
                 className="w-full bg-white border-2 border-green-800/20 rounded-2xl py-3 pl-12 pr-10 focus:outline-none focus:border-[#2d5a27] text-gray-700 appearance-none"
               >
@@ -135,18 +141,15 @@ const CreateAccount = () => {
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <select
                   value={district}
-                  onChange={(e) => setdistrict(e.target.value)}
+                  onChange={(e) => setdistrict(Number(e.target.value))}
                   className="w-full bg-white border-2 border-green-800/20 rounded-2xl py-3 pl-12 pr-10 focus:outline-none focus:border-[#2d5a27] text-gray-700 appearance-none"
                 >
                   <option value="">Select your district</option>
 
                   {districts.map((dist, index) => (
-                    <option
-                      key={dist.id || index}
-                      value={dist.name || dist}
-                    >
-                      {dist.name || dist}
-                    </option>
+                    <option key={dist.id} value={dist.id}>
+  {dist.name}
+</option>
                   ))}
 
                 </select>

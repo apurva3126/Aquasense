@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { crops } from "../data/cropsData";   // 👈 static crops file
+import { getCrops } from "../api";
+import { registerUser, selectCropForDevice } from "../api";
+
 
 const categories = [
   "Cereal",
@@ -19,15 +21,58 @@ const units = [
 
 const waterSources = ["Tubewell", "Tank", "Canal", "Tap"];
 
+const months = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
+];
+
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
+
 const FieldSetup = () => {
   const navigate = useNavigate();
 
+  const location = useLocation();
+const stepOneData = location.state;
+
+const [crops, setCrops] = useState([]);
   const [category, setCategory] = useState("Cereal");
-  const [selectedCrop, setSelectedCrop] = useState("");
+  const [selectedCrop, setSelectedCrop] = useState(null);
   const [soilType, setSoilType] = useState("");
   const [fieldSize, setFieldSize] = useState("");
   const [unit, setUnit] = useState("Killa");
   const [waterSource, setWaterSource] = useState("");
+
+  const [day, setDay] = useState("");
+const [month, setMonth] = useState("");
+const [year, setYear] = useState("");
+
+useEffect(() => {
+  if (!stepOneData) {
+    navigate("/register");
+  }
+}, [stepOneData, navigate]);
+
+useEffect(() => {
+  getCrops()
+    .then((data) => {
+      setCrops(data.crops);   // ✅ THIS IS THE FIX
+    })
+    .catch((err) => {
+      console.error("Crop fetch failed:", err);
+      setCrops([]);
+    });
+}, []);
+
+const getDaysInMonth = (month, year) => {
+  if (month === "" || year === "") return [];
+
+  return new Array(new Date(year, month + 1, 0).getDate())
+    .fill(null)
+    .map((_, i) => i + 1);
+};
+
+const days = getDaysInMonth(month, year);
 
   const filteredCrops = crops.filter(
     (crop) => crop.category === category
@@ -37,24 +82,68 @@ const FieldSetup = () => {
     (crop) => crop.id === selectedCrop
   );
 
-  const relevantSoilTypes = selectedCropData?.soilTypes || [];
+  console.log("selectedCrop:", selectedCrop, typeof selectedCrop);
+console.log("first crop id type:", crops[0]?.id, typeof crops[0]?.id);
+console.log("selectedCropData:", selectedCropData);
+console.log("soilTypes:", selectedCropData?.soilTypes);
 
-  const handleContinue = () => {
-    if (!selectedCrop || !soilType || !fieldSize || !waterSource) {
-      alert("Please complete all required fields");
-      return;
-    }
+  const relevantSoilTypes = selectedCropData?.preferred_soils || [];
 
-    console.log({
-      crop: selectedCropData.name,
-      soil: soilType,
-      size: fieldSize,
-      unit,
-      waterSource
+  const isValidDate = () => {
+  if (!day || month === "" || !year) return false;
+
+  const testDate = new Date(year, month, day);
+
+  return (
+    testDate.getFullYear() === Number(year) &&
+    testDate.getMonth() === Number(month) &&
+    testDate.getDate() === Number(day)
+  );
+};
+
+const uniqueDeviceId = crypto.randomUUID();
+
+  const handleContinue = async () => {
+  if (!selectedCrop || !soilType || !fieldSize || !waterSource) {
+    alert("Please complete all required fields");
+    return;
+  }
+  if (!isValidDate()) {
+  alert("Please select a valid sowing date");
+  return;
+}
+
+  const finalPayload = {
+  ...stepOneData,
+  crop_id: Number(selectedCrop),
+  device_id: uniqueDeviceId,
+  water_source: waterSource.toLowerCase(),
+  preferred_language: "en",
+  land_size_value: Number(fieldSize),
+  land_size_unit: unit.toLowerCase()
+};
+
+  try {
+    // 1️⃣ Register user
+    await registerUser(finalPayload);
+
+    // 2️⃣ Tell sensor which crop is selected
+    await selectCropForDevice({
+      device_id: uniqueDeviceId,
+      crop_name: selectedCropData.name,
+      sowing_date: new Date(year, month, day)
+  .toISOString()
+  .split("T")[0]
     });
 
+    alert("Registration successful!");
     navigate("/field-status");
-  };
+
+  } catch (error) {
+    console.error(error);
+    alert("Registration failed");
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#dbe4d8] flex justify-center">
@@ -101,9 +190,9 @@ const FieldSetup = () => {
               <button
                 key={crop.id}
                 onClick={() => {
-                  setSelectedCrop(crop.id);
-                  setSoilType("");
-                }}
+  setSelectedCrop(crop.id);
+  setSoilType("");
+}}
                 className={`border rounded-xl p-4 text-sm ${
                   selectedCrop === crop.id
                     ? "border-green-700 bg-green-50"
@@ -138,6 +227,44 @@ const FieldSetup = () => {
               </div>
             </div>
           )}
+
+          {/* Sowing Date */}
+<div className="mt-6">
+  <label className="text-sm font-semibold text-green-800">
+    Sowing Date
+  </label>
+
+  <div className="flex gap-2 mt-2">
+    <select
+      value={day}
+      onChange={(e)=>setDay(Number(e.target.value))}
+      className="flex-1 border rounded-full px-3 py-2"
+    >
+      <option value="">Day</option>
+      {days.map(d => <option key={d} value={d}>{d}</option>)}
+    </select>
+
+    <select
+      value={month}
+      onChange={(e)=>setMonth(Number(e.target.value))}
+      className="flex-1 border rounded-full px-3 py-2"
+    >
+      <option value="">Month</option>
+      {months.map((m, index) => (
+        <option key={m} value={index}>{m}</option>
+      ))}
+    </select>
+
+    <select
+      value={year}
+      onChange={(e)=>setYear(Number(e.target.value))}
+      className="flex-1 border rounded-full px-3 py-2"
+    >
+      <option value="">Year</option>
+      {years.map(y => <option key={y} value={y}>{y}</option>)}
+    </select>
+  </div>
+</div>
 
           {/* Field Size */}
           <div className="mt-6">

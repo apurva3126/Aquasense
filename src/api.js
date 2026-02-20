@@ -11,23 +11,23 @@ export async function getdistricts() {
   return res.json();
 }
 
-export async function registerUser(payload) {
-  const res = await fetch(`${API_BASE}/users/register`, {
+export const registerUser = async (userData) => {
+  const response = await fetch(`${API_BASE}/users/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(userData),
   });
 
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.detail || "Registration failed");
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw data;
   }
 
-  return res.json();
-}
-
+  return data;
+};
 export async function updateSoilAI(payload) {
   const res = await fetch(`${API_BASE}/sensors/update-soil-ai`, {
     method: "PUT",
@@ -40,6 +40,25 @@ export async function updateSoilAI(payload) {
   if (!res.ok) {
     const error = await res.json();
     throw new Error(error.detail || "Soil update failed");
+  }
+
+  return res.json();
+}
+
+export async function selectCropForDevice(payload) {
+  const res = await fetch(
+    `${API_BASE}/sensors/select-crop`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to select crop");
   }
 
   return res.json();

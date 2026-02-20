@@ -62,11 +62,7 @@ const [crops, setCrops] = useState([]);
   (crop) => crop.id === Number(selectedCrop)
 );
 
-  const relevantSoilTypes = selectedCropData
-  ? Array.isArray(selectedCropData.soil_types)
-    ? selectedCropData.soil_types
-    : selectedCropData.soil_types?.split(",") || []
-  : [];
+ const relevantSoilTypes = selectedCropData?.preferred_soils || [];
 
 
    useEffect(() => {

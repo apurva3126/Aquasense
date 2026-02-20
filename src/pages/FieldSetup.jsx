@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getCrops, updateSoilAI } from "../api";
+
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { crops } from "../data/cropsData";
+
+
+
 
 
 const categories = [
@@ -36,6 +40,7 @@ const years = Array.from({ length: 20 }, (_, i) => 2024 + i);
 const FieldSetup = () => {
   const navigate = useNavigate();
 
+const [crops, setCrops] = useState([]);
 
   const [category, setCategory] = useState("Cereal");
   const [selectedCrop, setSelectedCrop] = useState("");
@@ -50,37 +55,67 @@ const FieldSetup = () => {
   const [year, setYear] = useState("");
 
   const filteredCrops = crops.filter(
-    (crop) => crop.category === category
-  );
+  (crop) => crop.category?.toLowerCase() === category.toLowerCase()
+);
 
   const selectedCropData = crops.find(
-    (crop) => crop.id === selectedCrop
-  );
+  (crop) => crop.id === Number(selectedCrop)
+);
 
   const relevantSoilTypes = selectedCropData
-    ? selectedCropData.soilTypes
-    : [];
+  ? Array.isArray(selectedCropData.soil_types)
+    ? selectedCropData.soil_types
+    : selectedCropData.soil_types?.split(",") || []
+  : [];
 
-  const handleContinue = () => {
-    
-    if (!selectedCrop || !soilType || !fieldSize || !waterSource || !day || !month || !year) {
-      alert("Please complete all required fields");
-      return;
-    }
 
-    const monthIndex = months.indexOf(month) + 1;
+   useEffect(() => {
+  console.log("FieldSetup mounted");
+
+  getCrops()
+    .then((data) => {
+      console.log("Fetched crops:", data);
+      setCrops(data.crops); // 👈 THIS IS THE FIX
+    })
+    .catch((err) => console.error("Fetch error:", err));
+}, []);
+
+  const handleContinue = async () => {
+
+  if (!selectedCrop || !soilType || !fieldSize || !waterSource || !day || !month || !year) {
+    alert("Please complete all required fields");
+    return;
+  }
+
+  const monthIndex = months.indexOf(month) + 1;
 
   const isValidDate =
     new Date(`${year}-${monthIndex}-${day}`).getDate() == day;
 
   if (!isValidDate) {
-    setError("Invalid sowing date selected");
+    alert("Invalid sowing date selected");
     return;
   }
 
+  try {
+    const payload = {
+      device_id: "TEMP_DEVICE_001",
+      soil_type: soilType,
+    };
+
+    console.log("Sending soil update:", payload);
+
+    const response = await updateSoilAI(payload);
+
+    console.log("Soil AI updated:", response);
 
     navigate("/field-status");
-  };
+
+  } catch (err) {
+    console.error("Soil update failed:", err);
+    alert("Backend soil update failed. Check console.");
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#dbe4d8] flex justify-center">

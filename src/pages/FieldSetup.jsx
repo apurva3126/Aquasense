@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { getCrops } from "../api";
-import { registerUser, selectCropForDevice } from "../api";
+import { registerUser } from "../api";
 
 
 const categories = [
@@ -125,16 +125,22 @@ const uniqueDeviceId = crypto.randomUUID();
 
   try {
     // 1️⃣ Register user
-    await registerUser(finalPayload);
+   const formattedDate = new Date(year, month, day)
+  .toISOString()
+  .split("T")[0];
+
+await registerUser({
+  ...stepOneData,
+  crop_id: Number(selectedCrop),
+  planting_date: formattedDate,
+  water_source: waterSource.toLowerCase(),
+  preferred_language: "en",
+  land_size_value: Number(fieldSize),
+  land_size_unit: unit.toLowerCase()
+});
 
     // 2️⃣ Tell sensor which crop is selected
-    await selectCropForDevice({
-      device_id: uniqueDeviceId,
-      crop_name: selectedCropData.name,
-      sowing_date: new Date(year, month, day)
-  .toISOString()
-  .split("T")[0]
-    });
+    
 
     alert("Registration successful!");
     navigate("/field-status");

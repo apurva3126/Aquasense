@@ -38,21 +38,7 @@ const FieldStatus = () => {
 
           <div className="space-y-6">
             
-            {/* 1. Crop Status Box */}
-            <div className="border border-[#2d5a27] rounded-2xl p-4 flex gap-4 bg-white">
-              <CheckCircle2 className="text-[#2d5a27] shrink-0" size={48} />
-              <div className="flex flex-col justify-between w-full">
-                <div>
-                  <h3 className="text-[#2d5a27] font-bold text-xl leading-tight">Crops are good!</h3>
-                  <p className="text-[#2d5a27] text-[10px] leading-tight opacity-80">
-                    Soil is slightly moist, irrigation is paused.
-                  </p>
-                </div>
-                <button className="text-[#2d5a27]/40 text-[10px] self-end underline mt-1">
-                  हिंदी अनुवाद
-                </button>
-              </div>
-            </div>
+            
 
             
             {/* 2. Device Status Box (Dynamic) */}

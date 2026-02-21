@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
+import { CheckCircle2 } from 'lucide-react';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -39,6 +40,22 @@ export default function Dashboard() {
 
         {/* CONTENT */}
         <div className="px-4 py-6 space-y-4">
+
+{/* 1. Crop Status Box */}
+            <div className="border border-[#2d5a27] rounded-2xl p-4 flex gap-4 bg-white">
+              <CheckCircle2 className="text-[#2d5a27] shrink-0" size={48} />
+              <div className="flex flex-col justify-between w-full">
+                <div>
+                  <h3 className="text-[#2d5a27] font-bold text-xl leading-tight">Crops are good!</h3>
+                  <p className="text-[#2d5a27] text-[10px] leading-tight opacity-80">
+                    Soil is slightly moist, irrigation is paused.
+                  </p>
+                </div>
+                <button className="text-[#2d5a27]/40 text-[10px] self-end underline mt-1">
+                  हिंदी अनुवाद
+                </button>
+              </div>
+            </div>
 
           {/* Soil Moisture */}
           <div className="bg-white rounded-2xl p-4 shadow border border-green-100">
